@@ -1,4 +1,4 @@
-package org.example;
+package fr.cermak.friendgame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 public class GameFrame extends JFrame implements KeyListener {
 
     private Color color;
+    private Timer timer;
 
     public GameFrame() {
         super();
@@ -17,6 +18,14 @@ public class GameFrame extends JFrame implements KeyListener {
         setSize(500, 500);
         color = Color.red;
         this.addKeyListener(this);
+
+        timer = new Timer(0, e -> {
+            color = Color.red;
+            repaint();
+            timer.stop();
+        });
+
+        timer.setInitialDelay(1000);
     }
 
     @Override
@@ -26,23 +35,18 @@ public class GameFrame extends JFrame implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent event) {}
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == ' ') {
+    public void keyPressed(KeyEvent event) {
+        if (event.getKeyChar() == ' ') {
             color = Color.green;
             repaint();
+
+            timer.start();
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        if (e.getKeyChar() == ' ') {
-            color = Color.red;
-            repaint();
-        }
-    }
+    public void keyReleased(KeyEvent event) {}
 }

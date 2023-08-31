@@ -1,6 +1,4 @@
-package org.example;
-
-import javax.swing.*;
+package fr.cermak.friendgame;
 
 public class Main {
     public static void main(String[] args) {
