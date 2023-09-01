@@ -1,2 +1,10 @@
+fr/cermak/engine/Panel.class
+fr/cermak/engine/Sprite.class
+fr/cermak/engine/GravityTimer.class
+fr/cermak/engine/Game.class
+fr/cermak/engine/Sprite$Pixel.class
 fr/cermak/friendgame/Main.class
-fr/cermak/friendgame/GameFrame.class
+fr/cermak/engine/KeyTracker.class
+fr/cermak/engine/World.class
+fr/cermak/friendgame/SpriteController.class
+fr/cermak/friendgame/FriendGame.class
