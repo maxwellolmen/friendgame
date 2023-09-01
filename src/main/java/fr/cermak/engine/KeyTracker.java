@@ -24,32 +24,38 @@ public abstract class KeyTracker implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         pressed.add(e.getKeyChar());
-        //onKeyPressed(e);
+
+        instKeyPress(e.getKeyChar());
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         pressed.remove(e.getKeyChar());
-        //onKeyReleased(e);
+
+        instKeyRelease(e.getKeyChar());
     }
 
     public void stroke() {
         for (char c : pressed) {
-            onKeyPressed(c);
+            repKeyPress(c);
             last.remove(c);
         }
 
         for (char c : last) {
-            onKeyReleased(c);
+            repKeyRelease(c);
         }
 
         last.clear();
         last.addAll(pressed);
     }
 
-    public abstract void onKeyPressed(char c);
+    public abstract void repKeyPress(char c);
 
-    public abstract void onKeyReleased(char c);
+    public abstract void repKeyRelease(char c);
+
+    public abstract void instKeyPress(char c);
+
+    public abstract void instKeyRelease(char c);
 
     public boolean isPressed(char c) {
         return pressed.contains(c);

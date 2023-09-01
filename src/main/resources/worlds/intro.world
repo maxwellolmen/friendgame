@@ -4,4 +4,4 @@ images/intro-bg.png
 maxwell,5,200,0,true,false,true
 filip,5,100,0,true,false,true
 # angel,5,300,0,true,false,true
-cloud,5,650,600,false,true,false
+surface,15,650,600,false,true,false

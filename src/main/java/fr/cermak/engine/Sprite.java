@@ -33,6 +33,7 @@ public class Sprite {
     }
 
     private List<Pixel> pixels;
+    private List<Pixel> edgePixels;
 
     private int height;
     private int width;
@@ -62,7 +63,7 @@ public class Sprite {
         this.playable = false;
         this.grounded = false;
 
-        InputStream is = getClass().getClassLoader().getResourceAsStream(filename + ".sprite");
+        InputStream is = getClass().getClassLoader().getResourceAsStream("sprites/" + filename + ".sprite");
 
         if (is == null) {
             System.err.println("SPRITE NOT LOADING CORRECTLY!");
@@ -71,6 +72,7 @@ public class Sprite {
         }
 
         pixels = new ArrayList<>();
+        edgePixels = new ArrayList<>();
 
         try {
             loadPixels(is, scale);
