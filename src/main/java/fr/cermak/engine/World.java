@@ -42,4 +42,12 @@ public class World {
             sprite.addX((int) sprite.getVelocityX());
         }
     }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
 }

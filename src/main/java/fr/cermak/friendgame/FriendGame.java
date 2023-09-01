@@ -8,14 +8,14 @@ public class FriendGame extends Game {
 
     private KeyTracker keyTracker;
 
-    public FriendGame() {
+    public FriendGame(String name) {
         super(500, 500, 500, 500);
 
-        Sprite sprite = new Sprite("maxwell", 5);
+        Sprite sprite = new Sprite(name, 5);
         sprite.setGravity(true);
         getPanel().getWorld().addSprite(sprite);
 
-        keyTracker = new SpriteController(sprite);
+        keyTracker = new SpriteController(sprite, getPanel().getWorld());
         addKeyListener(keyTracker);
     }
 }

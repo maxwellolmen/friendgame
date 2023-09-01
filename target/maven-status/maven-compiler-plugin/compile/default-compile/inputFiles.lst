@@ -1,3 +1,4 @@
+/Users/maxwellolmen/Documents/Programming/friendgame/src/main/java/fr/cermak/engine/SpriteConverter.java
 /Users/maxwellolmen/Documents/Programming/friendgame/src/main/java/fr/cermak/engine/GravityTimer.java
 /Users/maxwellolmen/Documents/Programming/friendgame/src/main/java/fr/cermak/engine/World.java
 /Users/maxwellolmen/Documents/Programming/friendgame/src/main/java/fr/cermak/engine/KeyTracker.java
@@ -6,4 +7,4 @@
 /Users/maxwellolmen/Documents/Programming/friendgame/src/main/java/fr/cermak/engine/Panel.java
 /Users/maxwellolmen/Documents/Programming/friendgame/src/main/java/fr/cermak/friendgame/SpriteController.java
 /Users/maxwellolmen/Documents/Programming/friendgame/src/main/java/fr/cermak/engine/Sprite.java
-/Users/maxwellolmen/Documents/Programming/friendgame/src/main/java/fr/cermak/friendgame/GameWindow.java
+/Users/maxwellolmen/Documents/Programming/friendgame/src/main/java/fr/cermak/friendgame/FriendGame.java

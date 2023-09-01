@@ -1,5 +1,6 @@
 fr/cermak/engine/Panel.class
 fr/cermak/engine/Sprite.class
+fr/cermak/engine/SpriteConverter.class
 fr/cermak/engine/GravityTimer.class
 fr/cermak/engine/Game.class
 fr/cermak/engine/Sprite$Pixel.class

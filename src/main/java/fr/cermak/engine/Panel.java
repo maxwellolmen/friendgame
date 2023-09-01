@@ -17,7 +17,7 @@ public class Panel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(Color.white);
+        g.setColor(new Color(85, 239, 246));
         g.fillRect(0, 0, 500, 500);
 
         for (Sprite sprite : world.getSprites()) {
