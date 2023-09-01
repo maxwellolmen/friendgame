@@ -69,12 +69,16 @@ public class World {
             int x = Integer.parseInt(split[2]);
             int y = Integer.parseInt(split[3]);
             boolean gravity = Boolean.parseBoolean(split[4]);
+            boolean blocking = Boolean.parseBoolean(split[5]);
+            boolean playable = Boolean.parseBoolean(split[6]);
 
             Sprite sprite = new Sprite(name, scale);
 
             sprite.setX(x);
             sprite.setY(y);
             sprite.setGravity(gravity);
+            sprite.setBlocking(blocking);
+            sprite.setPlayable(playable);
 
             addSprite(sprite);
         }
@@ -97,14 +101,34 @@ public class World {
                 sprite.addVelocityY(1);
             }
 
+            boolean floor = false;
             if (sprite.getY() < ((height - sprite.getHeight()) - (sprite.getVelocityY()))) {
                 sprite.addY((int) sprite.getVelocityY());
             } else {
+                floor = true;
                 sprite.setY(height - sprite.getHeight());
                 sprite.setVelocityY(0);
             }
 
             sprite.addX((int) sprite.getVelocityX());
+
+            int collision = isColliding(sprite);
+
+            if (collision == 1 || collision == 2) {
+                // foot or head collision
+                sprite.setVelocityY(0);
+                sprite.setY(sprite.getOldY());
+                //sprite.setX(sprite.getOldX());
+                if (collision == 1) sprite.setGrounded(true);
+            } else if (collision == 3) {
+                // side collision
+                sprite.setX(sprite.getOldX());
+                if (sprite.getOldY() < (height - sprite.getHeight() - 1)) sprite.setY(sprite.getOldY() + 1);
+                sprite.setVelocityY(0);
+                sprite.setVelocityX(0);
+            } else {
+                sprite.setGrounded(floor);
+            }
         }
     }
 
@@ -118,5 +142,24 @@ public class World {
 
     public Image getBackground() {
         return background;
+    }
+
+    // 0: No collision
+    // 1: Foot collision
+    // 2: Head collision
+    // 3: Side collision
+    public int isColliding(Sprite sprite) {
+        for (Sprite other : sprites) {
+
+            if (sprite != other && other.isBlocking() && sprite.getDistance(other) < 125) {
+                int collision = sprite.isColliding(other);
+
+                if (collision != 0) {
+                    return collision;
+                }
+            }
+        }
+
+        return 0;
     }
 }

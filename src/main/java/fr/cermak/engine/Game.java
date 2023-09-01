@@ -6,7 +6,9 @@ public class Game extends JFrame {
 
     private Panel panel;
 
-    public Game(int windowWidth, int windowHeight, String startingWorld) {
+    private GravityTimer timer;
+
+    public Game(int windowWidth, int windowHeight, String startingWorld, KeyTracker keyTracker) {
         super();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,8 +19,12 @@ public class Game extends JFrame {
 
         pack();
 
-        GravityTimer gravity = new GravityTimer(this);
-        gravity.start();
+        timer = new GravityTimer(this, keyTracker);
+        timer.start();
+    }
+
+    public Game(int windowWidth, int windowHeight, String startingWorld) {
+        this(windowWidth, windowHeight, startingWorld, null);
     }
 
     public void update() {
@@ -27,5 +33,9 @@ public class Game extends JFrame {
 
     public Panel getPanel() {
         return panel;
+    }
+
+    public void setKeyTracker(KeyTracker keyTracker) {
+        timer.setKeyTracker(keyTracker);
     }
 }

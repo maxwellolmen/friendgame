@@ -18,6 +18,18 @@ public class Sprite {
             this.offsetY = offsetY;
             this.color = color;
         }
+
+        public boolean isWithin(List<Pixel> pixels, int curX, int curY, int otherX, int otherY) {
+            //System.out.println(curX + " " + curY + ", " + otherX + " " + otherY + "\n");
+
+            for (Pixel pixel : pixels) {
+                //System.out.println((offsetX + curX) + " " + (offsetY + curY) + ", " + (pixel.offsetX + otherX) + " " + (pixel.offsetY + otherY));
+
+                if ((pixel.offsetX + otherX) == (offsetX + curX) && (pixel.offsetY + otherY) == (offsetY + curY)) return true;
+            }
+
+            return false;
+        }
     }
 
     private List<Pixel> pixels;
@@ -35,6 +47,10 @@ public class Sprite {
     private double velocityY;
 
     private boolean gravity;
+    private boolean blocking;
+    private boolean playable;
+
+    private boolean grounded;
 
     public Sprite(String filename, int scale) {
         this.x = this.oldX = 200;
@@ -42,11 +58,15 @@ public class Sprite {
         this.velocityX = 0;
         this.velocityY = 0;
         this.gravity = true;
+        this.blocking = true;
+        this.playable = false;
+        this.grounded = false;
 
         InputStream is = getClass().getClassLoader().getResourceAsStream(filename + ".sprite");
 
         if (is == null) {
             System.err.println("SPRITE NOT LOADING CORRECTLY!");
+            System.err.println(filename + ".sprite");
             is = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("sprites/blob.sprite")); // default sprite image
         }
 
@@ -81,7 +101,7 @@ public class Sprite {
 
             for (int i = 0; i < scale; i++) {
                 for (int j = 0; j < scale; j++) {
-                    Pixel pixel = new Pixel(x * scale - i, y * scale - j, color);
+                    Pixel pixel = new Pixel(x * scale + i, y * scale + j, color);
                     pixels.add(pixel);
                 }
             }
@@ -173,5 +193,54 @@ public class Sprite {
 
     public int getWidth() {
         return width;
+    }
+
+    public boolean isPlayable() {
+        return playable;
+    }
+
+    public void setPlayable(boolean playable) {
+        this.playable = playable;
+    }
+
+    public boolean isBlocking() {
+        return blocking;
+    }
+
+    public void setBlocking(boolean blocking) {
+        this.blocking = blocking;
+    }
+
+    // 0: No collision
+    // 1: Foot collision
+    // 2: Head collision
+    // 3: Side collision
+    public int isColliding(Sprite other) {
+        boolean side = false;
+        for (Pixel pixel : pixels) {
+            if (pixel.isWithin(other.getPixels(), x, y, other.getX(), other.getY())) {
+                if (pixel.offsetY == height - 1) {
+                    return 1;
+                } else if (pixel.offsetY == 0) {
+                    return 2;
+                } else {
+                    side = true;
+                }
+            }
+        }
+
+        return side ? 3 : 0;
+    }
+
+    public double getDistance(Sprite other) {
+        return Math.sqrt(Math.pow(other.getX() - x, 2.0) + Math.pow(other.getY() - y, 2.0));
+    }
+
+    public boolean isGrounded() {
+        return grounded;
+    }
+
+    public void setGrounded(boolean grounded) {
+        this.grounded = grounded;
     }
 }

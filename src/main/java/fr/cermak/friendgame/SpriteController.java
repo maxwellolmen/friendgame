@@ -19,22 +19,33 @@ public class SpriteController extends KeyTracker {
     }
 
     @Override
-    public void onKeyPressed(KeyEvent e) {
-        char c = e.getKeyChar();
-
+    public void onKeyPressed(char c) {
         if (c == ' ' || c == 'w' || c == VK_UP) {
-            if (sprite.getY() == (world.getHeight() - sprite.getHeight())) sprite.setVelocityY(-17);
+            if (sprite.isGrounded()) {
+                sprite.setVelocityY(-17);
+            }
         } else if (c == VK_LEFT || c == 'a' && !isRightPressed()) {
             sprite.setVelocityX(-5);
         } else if (c == VK_RIGHT || c == 'd' && !isLeftPressed()) {
             sprite.setVelocityX(5);
+        } else if (c == 'l') {
+            sprite.setVelocityX(0);
+
+            int index = world.getSprites().indexOf(sprite);
+            do {
+                index++;
+
+                if (index == world.getSprites().size()) {
+                    index = 0;
+                }
+            } while (!world.getSprites().get(index).isPlayable());
+
+            sprite = world.getSprites().get(index);
         }
     }
 
     @Override
-    public void onKeyReleased(KeyEvent e) {
-        char c = e.getKeyChar();
-
+    public void onKeyReleased(char c) {
         if (c == VK_LEFT || c == VK_RIGHT || c == 'a' || c == 'd') {
             if (!isHorizPressed()) {
                 sprite.setVelocityX(0);
@@ -44,5 +55,9 @@ public class SpriteController extends KeyTracker {
                 sprite.setVelocityX(5);
             }
         }
+    }
+
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
     }
 }

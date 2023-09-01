@@ -4,12 +4,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        /*Scanner scanner = new Scanner(System.in);
         System.out.print("Select character: ");
 
-        String name = scanner.nextLine();
+        String name = scanner.nextLine();*/
 
-        FriendGame frame = new FriendGame(name.toLowerCase());
+        FriendGame frame = new FriendGame();
 
         frame.setVisible(true);
     }

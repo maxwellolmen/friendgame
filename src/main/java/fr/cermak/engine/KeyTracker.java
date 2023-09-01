@@ -10,9 +10,11 @@ import static java.awt.event.KeyEvent.VK_RIGHT;
 
 public abstract class KeyTracker implements KeyListener {
 
+    private Set<Character> last;
     private Set<Character> pressed;
 
     public KeyTracker() {
+        last = new HashSet<>();
         pressed = new HashSet<>();
     }
 
@@ -22,18 +24,32 @@ public abstract class KeyTracker implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         pressed.add(e.getKeyChar());
-        onKeyPressed(e);
+        //onKeyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         pressed.remove(e.getKeyChar());
-        onKeyReleased(e);
+        //onKeyReleased(e);
     }
 
-    public abstract void onKeyPressed(KeyEvent e);
+    public void stroke() {
+        for (char c : pressed) {
+            onKeyPressed(c);
+            last.remove(c);
+        }
 
-    public abstract void onKeyReleased(KeyEvent e);
+        for (char c : last) {
+            onKeyReleased(c);
+        }
+
+        last.clear();
+        last.addAll(pressed);
+    }
+
+    public abstract void onKeyPressed(char c);
+
+    public abstract void onKeyReleased(char c);
 
     public boolean isPressed(char c) {
         return pressed.contains(c);
