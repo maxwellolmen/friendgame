@@ -1,6 +1,5 @@
 package fr.cermak.engine;
 
-import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,17 +7,18 @@ public class Panel extends JPanel {
 
     private World world;
 
-    public Panel(int worldWidth, int worldHeight, int windowWidth, int windowHeight) {
+    public Panel(int windowWidth, int windowHeight, String startingWorld) {
         super();
 
         setPreferredSize(new Dimension(windowWidth, windowHeight));
-        this.world = new World(worldWidth, worldHeight);
+        this.world = new World(startingWorld);
     }
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(new Color(85, 239, 246));
-        g.fillRect(0, 0, 500, 500);
+        if (world.getBackground() != null) {
+            g.drawImage(world.getBackground(), 0, 0, world.getWidth(), world.getHeight(), null);
+        }
 
         for (Sprite sprite : world.getSprites()) {
             for (Sprite.Pixel pixel : sprite.getPixels()) {

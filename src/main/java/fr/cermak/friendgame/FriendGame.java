@@ -9,7 +9,7 @@ public class FriendGame extends Game {
     private KeyTracker keyTracker;
 
     public FriendGame(String name) {
-        super(500, 500, 500, 500);
+        super(1200, 700, "intro");
 
         Sprite sprite = new Sprite(name, 5);
         sprite.setGravity(true);

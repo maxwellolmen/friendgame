@@ -47,7 +47,7 @@ public class Sprite {
 
         if (is == null) {
             System.err.println("SPRITE NOT LOADING CORRECTLY!");
-            is = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("blob.sprite")); // default sprite image
+            is = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("sprites/blob.sprite")); // default sprite image
         }
 
         pixels = new ArrayList<>();
@@ -75,7 +75,7 @@ public class Sprite {
                 width = x + 1;
             }
 
-            if (y + 1> height) {
+            if (y + 1 > height) {
                 height = y + 1;
             }
 
