@@ -1,10 +1,11 @@
 package fr.cermak.engine;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URISyntaxException;
+import java.nio.Buffer;
+import java.util.*;
 import java.awt.*;
 import java.io.*;
-import java.util.Objects;
+import java.util.List;
 
 public class Sprite {
 
@@ -32,8 +33,8 @@ public class Sprite {
         }
     }
 
-    private List<Pixel> pixels;
-    private List<Pixel> edgePixels;
+    private Map<String, List<Pixel>> phases;
+    private String phase;
 
     private int height;
     private int width;
@@ -65,25 +66,34 @@ public class Sprite {
         this.grounded = false;
         this.active = false;
 
-        InputStream is = getClass().getClassLoader().getResourceAsStream("sprites/" + filename + ".sprite");
-
-        if (is == null) {
-            System.err.println("SPRITE NOT LOADING CORRECTLY!");
-            System.err.println(filename + ".sprite");
-            is = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("sprites/blob.sprite")); // default sprite image
-        }
-
-        pixels = new ArrayList<>();
-        edgePixels = new ArrayList<>();
+        phases = new TreeMap<>();
+        phase = "default";
 
         try {
-            loadPixels(is, scale);
+            InputStream is = getClass().getClassLoader().getResourceAsStream("sprites/" + filename + "/phases.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)));
+
+            String phaseLine = reader.readLine();
+            String[] split = phaseLine.split(",");
+
+            for (String phaseString : split) {
+                InputStream is2 = getClass().getClassLoader().getResourceAsStream("sprites/" + filename + "/" + phaseString + ".sprite");
+
+                loadPixels(is2, scale, phaseString);
+                Objects.requireNonNull(is2).close();
+            }
+
+            reader.close();
+            is.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void loadPixels(InputStream is, int scale) throws IOException {
+    public void loadPixels(InputStream is, int scale, String phase) throws IOException {
+        List<Pixel> pixels = new ArrayList<>();
+        phases.put(phase, pixels);
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
         while (reader.ready()) {
@@ -113,6 +123,8 @@ public class Sprite {
 
         width *= scale;
         height *= scale;
+
+        reader.close();
     }
 
     public void setGravity(boolean gravity) {
@@ -144,7 +156,7 @@ public class Sprite {
     }
 
     public List<Pixel> getPixels() {
-        return pixels;
+        return phases.get(phase);
     }
 
     public void setOldX(int oldX) {
@@ -264,5 +276,9 @@ public class Sprite {
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setPhase(String phase) {
+        this.phase = phase;
     }
 }

@@ -37,7 +37,8 @@
                 <directory>src/main/resources/</directory>
                 <includes>
                     <include>images/*.png</include>
-                    <include>sprites/*.sprite</include>
+                    <include>sprites/*/*.sprite</include>
+                    <include>sprites/*/phases.txt</include>
                     <include>worlds/*.world</include>
                 </includes>
             </resource>
