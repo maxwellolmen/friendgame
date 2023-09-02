@@ -1,7 +1,7 @@
-1200,700
+2400,700
 images/intro-bg.png
 # name,scale,x,y,gravity,blocking,playable
 maxwell,5,200,0,true,false,true
 filip,5,100,0,true,false,true
-# angel,5,300,0,true,false,true
+angel,5,300,0,true,false,true
 surface,15,650,600,false,true,false

@@ -52,6 +52,7 @@ public class Sprite {
     private boolean playable;
 
     private boolean grounded;
+    private boolean active;
 
     public Sprite(String filename, int scale) {
         this.x = this.oldX = 200;
@@ -62,6 +63,7 @@ public class Sprite {
         this.blocking = true;
         this.playable = false;
         this.grounded = false;
+        this.active = false;
 
         InputStream is = getClass().getClassLoader().getResourceAsStream("sprites/" + filename + ".sprite");
 
@@ -213,36 +215,54 @@ public class Sprite {
         this.blocking = blocking;
     }
 
-    // 0: No collision
-    // 1: Foot collision
-    // 2: Head collision
-    // 3: Side collision
-    public int isColliding(Sprite other) {
-        boolean side = false;
-        for (Pixel pixel : pixels) {
-            if (pixel.isWithin(other.getPixels(), x, y, other.getX(), other.getY())) {
-                if (pixel.offsetY == height - 1) {
-                    return 1;
-                } else if (pixel.offsetY == 0) {
-                    return 2;
-                } else {
-                    side = true;
-                }
-            }
+    public boolean isColliding(Sprite other) {
+        if (x < (other.getX() + other.getWidth())
+                && x + width > other.getX()
+                && y < (other.getY() + other.getHeight())
+                && y + height > other.getY()) {
+            return true;
         }
 
-        return side ? 3 : 0;
+        return false;
     }
 
     public double getDistance(Sprite other) {
         return Math.sqrt(Math.pow(other.getX() - x, 2.0) + Math.pow(other.getY() - y, 2.0));
     }
 
-    public boolean isGrounded() {
-        return grounded;
+    public boolean isGrounded(World world) {
+        if (y == (world.getHeight() - height)) {
+            return true;
+        }
+
+        for (Sprite other : world.getSprites()) {
+            if (other.getY() == (y + height)) {
+                if (x < other.getX()) {
+                    if (width > (other.getX() - x)) {
+                        return true;
+                    }
+                } else if (x > other.getX()) {
+                    if (other.getWidth() > (x - other.getX())) {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public void setGrounded(boolean grounded) {
         this.grounded = grounded;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

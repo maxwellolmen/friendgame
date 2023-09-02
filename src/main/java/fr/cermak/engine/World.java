@@ -14,14 +14,10 @@ public class World {
 
     private Image background;
 
-    /*public World(int width, int height) {
-        this.width = width;
-        this.height = height;
+    private Panel panel;
 
-        sprites = new ArrayList<>();
-    }*/
-
-    public World(String name) {
+    public World(Panel panel, String name) {
+        this.panel = panel;
         sprites = new ArrayList<>();
 
         try {
@@ -97,37 +93,68 @@ public class World {
             sprite.setOldX(sprite.getX());
             sprite.setOldY(sprite.getY());
 
-            if (sprite.hasGravity() && sprite.getY() < (height - sprite.getHeight())) {
+            if (!sprite.isGrounded(this) && sprite.hasGravity()) {
                 sprite.addVelocityY(1);
             }
 
-            boolean floor = false;
             if (sprite.getY() < ((height - sprite.getHeight()) - (sprite.getVelocityY()))) {
                 sprite.addY((int) sprite.getVelocityY());
             } else {
-                floor = true;
                 sprite.setY(height - sprite.getHeight());
                 sprite.setVelocityY(0);
             }
 
-            sprite.addX((int) sprite.getVelocityX());
+            if (sprite.getVelocityX() < 0) {
+                if (sprite.getX() > -(sprite.getVelocityX())) {
+                    sprite.addX((int) sprite.getVelocityX());
+                } else {
+                    sprite.setX(0);
+                    sprite.setVelocityX(0);
+                }
+            } else if (sprite.getVelocityX() > 0) {
+                if (sprite.getX() < (width - sprite.getVelocityX() - sprite.getWidth() + 1)) {
+                    sprite.addX((int) sprite.getVelocityX());
+                } else {
+                    sprite.setX(width - sprite.getWidth() + 1);
+                    sprite.setVelocityX(0);
+                }
+            }
 
-            int collision = isColliding(sprite);
-
-            if (collision == 1 || collision == 2) {
-                // foot or head collision
-                sprite.setVelocityY(0);
-                sprite.setY(sprite.getOldY());
-                //sprite.setX(sprite.getOldX());
-                if (collision == 1) sprite.setGrounded(true);
-            } else if (collision == 3) {
-                // side collision
-                sprite.setX(sprite.getOldX());
-                if (sprite.getOldY() < (height - sprite.getHeight() - 1)) sprite.setY(sprite.getOldY() + 1);
-                sprite.setVelocityY(0);
+            if (isColliding(sprite)) {
                 sprite.setVelocityX(0);
-            } else {
-                sprite.setGrounded(floor);
+                sprite.setVelocityY(0);
+                sprite.setX(sprite.getOldX());
+                sprite.setY(sprite.getOldY());
+
+                if (!sprite.isGrounded(this)) {
+                    sprite.addY(1);
+                }
+            }
+
+            if (sprite.isActive()) {
+                if ((sprite.getX() + sprite.getWidth()) > (panel.getCameraX() + panel.getWidth() - 100)) {
+                    panel.setCameraX(sprite.getX() + sprite.getWidth() - panel.getWidth() + 100);
+                } else if (sprite.getX() < panel.getCameraX() + 100) {
+                    panel.setCameraX(sprite.getX() - 100);
+                }
+
+                if ((sprite.getY() + sprite.getHeight()) > (panel.getCameraY() + panel.getHeight() - 100)) {
+                    panel.setCameraY(sprite.getY() + sprite.getHeight() + 100);
+                } else if (sprite.getY() < panel.getCameraY() + 100) {
+                    panel.setCameraY(sprite.getY() - 100);
+                }
+
+                if (panel.getCameraX() > (width - panel.getWidth())) {
+                    panel.setCameraX(width - panel.getWidth());
+                } else if (panel.getCameraX() < 0) {
+                    panel.setCameraX(0);
+                }
+
+                if (panel.getCameraY() > (height - panel.getHeight())) {
+                    panel.setCameraY(height - panel.getHeight());
+                } else if (panel.getCameraY() < 0) {
+                    panel.setCameraY(0);
+                }
             }
         }
     }
@@ -144,22 +171,14 @@ public class World {
         return background;
     }
 
-    // 0: No collision
-    // 1: Foot collision
-    // 2: Head collision
-    // 3: Side collision
-    public int isColliding(Sprite sprite) {
+    public boolean isColliding(Sprite sprite) {
         for (Sprite other : sprites) {
 
             if (sprite != other && other.isBlocking() && sprite.getDistance(other) < 125) {
-                int collision = sprite.isColliding(other);
-
-                if (collision != 0) {
-                    return collision;
-                }
+                return sprite.isColliding(other);
             }
         }
 
-        return 0;
+        return false;
     }
 }

@@ -5,13 +5,12 @@ import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Set;
 
-import static java.awt.event.KeyEvent.VK_LEFT;
-import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.*;
 
 public abstract class KeyTracker implements KeyListener {
 
-    private Set<Character> last;
-    private Set<Character> pressed;
+    private Set<Integer> last;
+    private Set<Integer> pressed;
 
     public KeyTracker() {
         last = new HashSet<>();
@@ -23,42 +22,42 @@ public abstract class KeyTracker implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        pressed.add(e.getKeyChar());
+        pressed.add(e.getKeyCode());
 
-        instKeyPress(e.getKeyChar());
+        instKeyPress(e.getKeyCode());
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        pressed.remove(e.getKeyChar());
+        pressed.remove(e.getKeyCode());
 
-        instKeyRelease(e.getKeyChar());
+        instKeyRelease(e.getKeyCode());
     }
 
     public void stroke() {
-        for (char c : pressed) {
-            repKeyPress(c);
-            last.remove(c);
+        for (int key : pressed) {
+            repKeyPress(key);
+            last.remove(key);
         }
 
-        for (char c : last) {
-            repKeyRelease(c);
+        for (int key : last) {
+            repKeyRelease(key);
         }
 
         last.clear();
         last.addAll(pressed);
     }
 
-    public abstract void repKeyPress(char c);
+    public abstract void repKeyPress(int key);
 
-    public abstract void repKeyRelease(char c);
+    public abstract void repKeyRelease(int key);
 
-    public abstract void instKeyPress(char c);
+    public abstract void instKeyPress(int key);
 
-    public abstract void instKeyRelease(char c);
+    public abstract void instKeyRelease(int key);
 
-    public boolean isPressed(char c) {
-        return pressed.contains(c);
+    public boolean isPressed(int key) {
+        return pressed.contains(key);
     }
 
     public boolean isHorizPressed() {
@@ -66,10 +65,10 @@ public abstract class KeyTracker implements KeyListener {
     }
 
     public boolean isLeftPressed() {
-        return pressed.contains('a') || pressed.contains(VK_LEFT);
+        return pressed.contains(VK_A) || pressed.contains(VK_LEFT) || pressed.contains(VK_KP_LEFT);
     }
 
     public boolean isRightPressed() {
-        return pressed.contains('d') || pressed.contains(VK_RIGHT);
+        return pressed.contains(VK_D) || pressed.contains(VK_RIGHT) || pressed.contains(VK_KP_RIGHT);
     }
 }

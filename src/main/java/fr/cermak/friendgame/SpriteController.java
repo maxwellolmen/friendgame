@@ -15,25 +15,26 @@ public class SpriteController extends KeyTracker {
 
     public SpriteController(Sprite sprite, World world) {
         this.sprite = sprite;
+        sprite.setActive(true);
         this.world = world;
     }
 
     @Override
-    public void repKeyPress(char c) {
-        if (c == ' ' || c == 'w' || c == VK_UP) {
-            if (sprite.isGrounded()) {
+    public void repKeyPress(int key) {
+        if (key == VK_SPACE || key == VK_W || key == VK_UP || key == VK_KP_UP) {
+            if (sprite.isGrounded(world)) {
                 sprite.setVelocityY(-17);
             }
-        } else if (c == VK_LEFT || c == 'a' && !isRightPressed()) {
+        } else if (key == VK_LEFT || key == VK_KP_LEFT || key == VK_A && !isRightPressed()) {
             sprite.setVelocityX(-5);
-        } else if (c == VK_RIGHT || c == 'd' && !isLeftPressed()) {
+        } else if (key == VK_RIGHT || key == VK_KP_RIGHT || key == VK_D && !isLeftPressed()) {
             sprite.setVelocityX(5);
         }
     }
 
     @Override
-    public void repKeyRelease(char c) {
-        if (c == VK_LEFT || c == VK_RIGHT || c == 'a' || c == 'd') {
+    public void repKeyRelease(int key) {
+        if (key == VK_LEFT || key == VK_RIGHT || key == VK_KP_LEFT || key == VK_KP_RIGHT || key == VK_A || key == VK_D) {
             if (!isHorizPressed()) {
                 sprite.setVelocityX(0);
             } else if (isLeftPressed()) {
@@ -45,8 +46,8 @@ public class SpriteController extends KeyTracker {
     }
 
     @Override
-    public void instKeyPress(char c) {
-        if (c == 'l') {
+    public void instKeyPress(int key) {
+        if (key == VK_L) {
             sprite.setVelocityX(0);
 
             int index = world.getSprites().indexOf(sprite);
@@ -58,16 +59,20 @@ public class SpriteController extends KeyTracker {
                 }
             } while (!world.getSprites().get(index).isPlayable());
 
+            sprite.setActive(false);
             sprite = world.getSprites().get(index);
+            sprite.setActive(true);
         }
     }
 
     @Override
-    public void instKeyRelease(char c) {
+    public void instKeyRelease(int key) {
 
     }
 
     public void setSprite(Sprite sprite) {
+        this.sprite.setActive(false);
         this.sprite = sprite;
+        this.sprite.setActive(true);
     }
 }
