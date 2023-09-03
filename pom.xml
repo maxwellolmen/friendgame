@@ -40,6 +40,7 @@
                     <include>sprites/*/*.sprite</include>
                     <include>sprites/*/phases.txt</include>
                     <include>worlds/*.world</include>
+                    <include>sprites/*/*.png</include>
                 </includes>
             </resource>
         </resources>

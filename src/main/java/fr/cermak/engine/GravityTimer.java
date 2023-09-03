@@ -1,23 +1,21 @@
 package fr.cermak.engine;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class GravityTimer extends Timer {
 
-    private static Game frame;
+    private static Screen frame;
 
     private static KeyTracker keyTracker;
 
-    private static int i;
-
-    public GravityTimer(Game frame, KeyTracker keyTracker) {
+    public GravityTimer(Screen frame, KeyTracker keyTracker) {
         super(10, e -> force());
 
         setInitialDelay(0);
 
         GravityTimer.frame = frame;
         GravityTimer.keyTracker = keyTracker;
-        GravityTimer.i = 0;
     }
 
     public static void force() {
@@ -27,6 +25,13 @@ public class GravityTimer extends Timer {
         if (keyTracker != null) {
             keyTracker.stroke();
         }
+
+        try {
+            int x = (int) (MouseInfo.getPointerInfo().getLocation().getX() - frame.getLocationOnScreen().getX());
+            int y = (int) (MouseInfo.getPointerInfo().getLocation().getY() - frame.getLocationOnScreen().getY() - 27);
+
+            frame.onMove(x, y);
+        } catch (IllegalComponentStateException e) {}
     }
 
     public void setKeyTracker(KeyTracker keyTracker) {

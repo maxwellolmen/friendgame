@@ -1,7 +1,7 @@
 package fr.cermak.engine;
 
-import java.net.URISyntaxException;
-import java.nio.Buffer;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.util.*;
 import java.awt.*;
 import java.io.*;
@@ -33,7 +33,10 @@ public class Sprite {
         }
     }
 
+    private String name;
     private Map<String, List<Pixel>> phases;
+    private Map<String, Image> images;
+
     private String phase;
 
     private int height;
@@ -66,7 +69,10 @@ public class Sprite {
         this.grounded = false;
         this.active = false;
 
+        this.name = filename;
+
         phases = new TreeMap<>();
+        images = new TreeMap<>();
         phase = "default";
 
         try {
@@ -91,38 +97,49 @@ public class Sprite {
     }
 
     public void loadPixels(InputStream is, int scale, String phase) throws IOException {
-        List<Pixel> pixels = new ArrayList<>();
-        phases.put(phase, pixels);
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-        while (reader.ready()) {
-            String line = reader.readLine();
+        boolean imaged = Boolean.parseBoolean(reader.readLine());
 
-            String[] split = line.split(",");
+        if (imaged) {
+            phases.put(phase, null);
+            BufferedImage image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("sprites/" + name + "/" + phase + ".png")));
+            images.put(phase, image);
 
-            int x = Integer.parseInt(split[0]);
-            int y = Integer.parseInt(split[1]);
-            Color color = new Color(Integer.parseInt(split[2]), Integer.parseInt(split[3]), Integer.parseInt(split[4]));
+            width = image.getWidth();
+            height = image.getHeight();
+        } else {
+            List<Pixel> pixels = new ArrayList<>();
+            phases.put(phase, pixels);
 
-            if (x + 1 > width) {
-                width = x + 1;
-            }
+            while (reader.ready()) {
+                String line = reader.readLine();
 
-            if (y + 1 > height) {
-                height = y + 1;
-            }
+                String[] split = line.split(",");
 
-            for (int i = 0; i < scale; i++) {
-                for (int j = 0; j < scale; j++) {
-                    Pixel pixel = new Pixel(x * scale + i, y * scale + j, color);
-                    pixels.add(pixel);
+                int x = Integer.parseInt(split[0]);
+                int y = Integer.parseInt(split[1]);
+                Color color = new Color(Integer.parseInt(split[2]), Integer.parseInt(split[3]), Integer.parseInt(split[4]));
+
+                if (x + 1 > width) {
+                    width = x + 1;
+                }
+
+                if (y + 1 > height) {
+                    height = y + 1;
+                }
+
+                for (int i = 0; i < scale; i++) {
+                    for (int j = 0; j < scale; j++) {
+                        Pixel pixel = new Pixel(x * scale + i, y * scale + j, color);
+                        pixels.add(pixel);
+                    }
                 }
             }
-        }
 
-        width *= scale;
-        height *= scale;
+            width *= scale;
+            height *= scale;
+        }
 
         reader.close();
     }
@@ -157,6 +174,10 @@ public class Sprite {
 
     public List<Pixel> getPixels() {
         return phases.get(phase);
+    }
+
+    public Image getImage() {
+        return images.get(phase);
     }
 
     public void setOldX(int oldX) {
@@ -247,7 +268,7 @@ public class Sprite {
             return true;
         }
 
-        for (Sprite other : world.getSprites()) {
+        for (Sprite other : world.getSprites().values()) {
             if (other.getY() == (y + height)) {
                 if (x < other.getX()) {
                     if (width > (other.getX() - x)) {
@@ -280,5 +301,18 @@ public class Sprite {
 
     public void setPhase(String phase) {
         this.phase = phase;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isOn(int x, int y) {
+        return (x >= this.x && x < (this.x + width) && y >= this.y && y < (this.y + height));
+    }
+
+    public void setLocation(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }

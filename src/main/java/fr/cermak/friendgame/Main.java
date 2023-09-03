@@ -1,16 +1,13 @@
 package fr.cermak.friendgame;
 
-import java.util.Scanner;
+import fr.cermak.engine.Screen;
+import fr.cermak.friendgame.screen.welcome.WelcomeScreen;
 
 public class Main {
+
     public static void main(String[] args) {
-        /*Scanner scanner = new Scanner(System.in);
-        System.out.print("Select character: ");
+        Screen screen = new WelcomeScreen();
 
-        String name = scanner.nextLine();*/
-
-        FriendGame frame = new FriendGame();
-
-        frame.setVisible(true);
+        screen.setVisible(true);
     }
 }

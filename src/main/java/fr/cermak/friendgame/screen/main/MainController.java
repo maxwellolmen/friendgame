@@ -1,19 +1,17 @@
-package fr.cermak.friendgame;
+package fr.cermak.friendgame.screen.main;
 
 import fr.cermak.engine.KeyTracker;
 import fr.cermak.engine.Sprite;
 import fr.cermak.engine.World;
 
-import java.awt.event.KeyEvent;
-
 import static java.awt.event.KeyEvent.*;
 
-public class SpriteController extends KeyTracker {
+public class MainController extends KeyTracker {
 
     private Sprite sprite;
     private World world;
 
-    public SpriteController(Sprite sprite, World world) {
+    public MainController(Sprite sprite, World world) {
         this.sprite = sprite;
         sprite.setActive(true);
         this.world = world;
@@ -47,7 +45,7 @@ public class SpriteController extends KeyTracker {
 
     @Override
     public void instKeyPress(int key) {
-        if (key == VK_L) {
+        /*if (key == VK_L) {
             sprite.setVelocityX(0);
 
             int index = world.getSprites().indexOf(sprite);
@@ -62,7 +60,7 @@ public class SpriteController extends KeyTracker {
             sprite.setActive(false);
             sprite = world.getSprites().get(index);
             sprite.setActive(true);
-        }
+        }*/
     }
 
     @Override

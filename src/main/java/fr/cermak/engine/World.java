@@ -3,14 +3,12 @@ package fr.cermak.engine;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class World {
 
     private int width, height;
-    private List<Sprite> sprites;
+    private Map<String, Sprite> sprites;
 
     private Image background;
 
@@ -18,12 +16,14 @@ public class World {
 
     public World(Panel panel, String name) {
         this.panel = panel;
-        sprites = new ArrayList<>();
+        sprites = new TreeMap<>();
 
-        try {
-            loadFromFile(name);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (name != null) {
+            try {
+                loadFromFile(name);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -80,16 +80,20 @@ public class World {
         }
     }
 
-    public List<Sprite> getSprites() {
+    public Map<String, Sprite> getSprites() {
         return sprites;
     }
 
+    public Sprite getSprite(String name) {
+        return sprites.get(name);
+    }
+
     public void addSprite(Sprite sprite) {
-        sprites.add(sprite);
+        sprites.put(sprite.getName(), sprite);
     }
 
     public void force() {
-        for (Sprite sprite : sprites) {
+        for (Sprite sprite : sprites.values()) {
             sprite.setOldX(sprite.getX());
             sprite.setOldY(sprite.getY());
 
@@ -172,7 +176,7 @@ public class World {
     }
 
     public boolean isColliding(Sprite sprite) {
-        for (Sprite other : sprites) {
+        for (Sprite other : sprites.values()) {
 
             if (sprite != other && other.isBlocking() && sprite.getDistance(other) < 125) {
                 return sprite.isColliding(other);
