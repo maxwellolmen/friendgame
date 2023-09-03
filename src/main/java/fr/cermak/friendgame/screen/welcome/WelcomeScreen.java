@@ -4,6 +4,7 @@ import fr.cermak.engine.Button;
 import fr.cermak.engine.Screen;
 import fr.cermak.engine.Sprite;
 import fr.cermak.friendgame.screen.main.MainScreen;
+import fr.cermak.friendgame.screen.settings.SettingsScreen;
 
 import java.awt.event.WindowEvent;
 
@@ -35,20 +36,13 @@ public class WelcomeScreen extends Screen {
 
             Screen screen = new MainScreen();
             screen.setVisible(true);
+        } else if (sprite == settings) {
+            close();
+
+            Screen screen = new SettingsScreen();
+            screen.setVisible(true);
         }
     }
 
-    @Override
-    public void onHover(Sprite sprite) {
-        if (sprite instanceof Button) {
-            ((Button) sprite).onHover();
-        }
-    }
 
-    @Override
-    public void onNoHover(Sprite sprite) {
-        if (sprite instanceof Button) {
-            ((Button) sprite).onNoHover();
-        }
-    }
 }

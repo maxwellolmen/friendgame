@@ -1,5 +1,7 @@
 package fr.cermak.engine;
 
+import fr.cermak.friendgame.screen.welcome.WelcomeScreen;
+
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.util.Collection;
@@ -57,9 +59,17 @@ public abstract class Screen extends JFrame {
         }
     }
 
-    public abstract void onHover(Sprite sprite);
+    public void onHover(Sprite sprite) {
+        if (sprite instanceof Button) {
+            ((Button) sprite).onHover();
+        }
+    }
 
-    public abstract void onNoHover(Sprite sprite);
+    public void onNoHover(Sprite sprite) {
+        if (sprite instanceof Button) {
+            ((Button) sprite).onNoHover();
+        }
+    }
 
     public void close() {
         timer.stop();
